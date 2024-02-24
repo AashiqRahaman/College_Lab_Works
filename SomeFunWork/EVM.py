@@ -26,5 +26,5 @@ while count <= 1000 :
     pyautogui.hotkey('ctrl','enter')
     time.sleep(0)
     count = count + 1
-    time.sleep(5)
+    time.sleep(10)
     
