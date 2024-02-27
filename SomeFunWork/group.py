@@ -4,10 +4,14 @@ import time
 time.sleep(3)
 count = 0
 
-while count <= 50 : 
-    pyautogui.typewrite("#Change_Our_Teacher #We_Don't_Tollarate_Harassment")
+while count <= 1 : 
+    pyautogui.typewrite("abc")
     pyautogui.hotkey('enter')
     count = count + 1
-    time.sleep(0.8)
-
+    time.sleep(0)
     
+while count <= 1 : 
+    pyautogui.typewrite("abc")
+    pyautogui.hotkey('enter')
+    count = count + 1
+    time.sleep(0)
