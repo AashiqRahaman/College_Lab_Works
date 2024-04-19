@@ -21,6 +21,9 @@ void perfect(int n)
         {
             printf("%d ", p);
         }
-        
+        else 
+        {
+            print
+        }
     }
 }
