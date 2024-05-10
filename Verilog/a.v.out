@@ -1,0 +1,118 @@
+#! /c/Source/iverilog-install/bin/vvp
+:ivl_version "12.0 (devel)" "(s20150603-1539-g2693dd32b)";
+:ivl_delay_selection "TYPICAL";
+:vpi_time_precision + 0;
+:vpi_module "C:\iverilog\lib\ivl\system.vpi";
+:vpi_module "C:\iverilog\lib\ivl\vhdl_sys.vpi";
+:vpi_module "C:\iverilog\lib\ivl\vhdl_textio.vpi";
+:vpi_module "C:\iverilog\lib\ivl\v2005_math.vpi";
+:vpi_module "C:\iverilog\lib\ivl\va_math.vpi";
+S_000001f780c3afa0 .scope module, "wb" "wb" 2 29;
+ .timescale 0 0;
+v000001f780c98370_0 .net "a", 0 0, v000001f780c96280_0;  1 drivers
+v000001f780c975b0_0 .net "b", 0 0, v000001f780c963c0_0;  1 drivers
+v000001f780c97290_0 .net "c", 0 0, v000001f780c96460_0;  1 drivers
+v000001f780c98050_0 .net "d", 0 0, v000001f780c96780_0;  1 drivers
+v000001f780c98550_0 .net "e", 0 0, L_000001f780c990f0;  1 drivers
+v000001f780c984b0_0 .net "s1", 0 0, v000001f780c95920_0;  1 drivers
+v000001f780c96ed0_0 .net "s2", 0 0, v000001f780c982d0_0;  1 drivers
+S_000001f780c4a1f0 .scope module, "dut" "mux1b4to1" 2 31, 2 1 0, S_000001f780c3afa0;
+ .timescale 0 0;
+    .port_info 0 /INPUT 1 "a";
+    .port_info 1 /INPUT 1 "b";
+    .port_info 2 /INPUT 1 "c";
+    .port_info 3 /INPUT 1 "d";
+    .port_info 4 /INPUT 1 "s1";
+    .port_info 5 /INPUT 1 "s2";
+    .port_info 6 /OUTPUT 1 "e";
+L_000001f780c39a30 .functor NOT 1, v000001f780c95920_0, C4<0>, C4<0>, C4<0>;
+L_000001f780c39790 .functor NOT 1, v000001f780c982d0_0, C4<0>, C4<0>, C4<0>;
+L_000001f780c39b80 .functor AND 1, L_000001f780c39a30, L_000001f780c39790, C4<1>, C4<1>;
+L_000001f780c39640 .functor AND 1, L_000001f780c39b80, v000001f780c96280_0, C4<1>, C4<1>;
+L_000001f780c39b10 .functor NOT 1, v000001f780c95920_0, C4<0>, C4<0>, C4<0>;
+L_000001f780c39800 .functor AND 1, L_000001f780c39b10, v000001f780c982d0_0, C4<1>, C4<1>;
+L_000001f780c39480 .functor AND 1, L_000001f780c39800, v000001f780c963c0_0, C4<1>, C4<1>;
+L_000001f780c39870 .functor NOT 1, v000001f780c982d0_0, C4<0>, C4<0>, C4<0>;
+L_000001f780c394f0 .functor AND 1, v000001f780c95920_0, L_000001f780c39870, C4<1>, C4<1>;
+L_000001f780c395d0 .functor AND 1, L_000001f780c394f0, v000001f780c96460_0, C4<1>, C4<1>;
+L_000001f780c398e0 .functor AND 1, v000001f780c95920_0, v000001f780c982d0_0, C4<1>, C4<1>;
+L_000001f780c39560 .functor AND 1, L_000001f780c398e0, v000001f780c96780_0, C4<1>, C4<1>;
+L_000001f780c98e50 .functor OR 1, L_000001f780c39640, L_000001f780c39480, C4<0>, C4<0>;
+L_000001f780c99400 .functor OR 1, L_000001f780c98e50, L_000001f780c395d0, C4<0>, C4<0>;
+L_000001f780c990f0 .functor OR 1, L_000001f780c99400, L_000001f780c39560, C4<0>, C4<0>;
+v000001f780c3b130_0 .net *"_ivl_0", 0 0, L_000001f780c39a30;  1 drivers
+v000001f780c3b1d0_0 .net *"_ivl_10", 0 0, L_000001f780c39800;  1 drivers
+v000001f780c95b00_0 .net *"_ivl_14", 0 0, L_000001f780c39870;  1 drivers
+v000001f780c95a60_0 .net *"_ivl_16", 0 0, L_000001f780c394f0;  1 drivers
+v000001f780c96640_0 .net *"_ivl_2", 0 0, L_000001f780c39790;  1 drivers
+v000001f780c96140_0 .net *"_ivl_20", 0 0, L_000001f780c398e0;  1 drivers
+v000001f780c95c40_0 .net *"_ivl_24", 0 0, L_000001f780c98e50;  1 drivers
+v000001f780c95ba0_0 .net *"_ivl_26", 0 0, L_000001f780c99400;  1 drivers
+v000001f780c960a0_0 .net *"_ivl_4", 0 0, L_000001f780c39b80;  1 drivers
+v000001f780c95ce0_0 .net *"_ivl_8", 0 0, L_000001f780c39b10;  1 drivers
+v000001f780c95d80_0 .net "a", 0 0, v000001f780c96280_0;  alias, 1 drivers
+v000001f780c96000_0 .net "b", 0 0, v000001f780c963c0_0;  alias, 1 drivers
+v000001f780c966e0_0 .net "c", 0 0, v000001f780c96460_0;  alias, 1 drivers
+v000001f780c96320_0 .net "d", 0 0, v000001f780c96780_0;  alias, 1 drivers
+v000001f780c95f60_0 .net "e", 0 0, L_000001f780c990f0;  alias, 1 drivers
+v000001f780c95e20_0 .net "p", 0 0, L_000001f780c39640;  1 drivers
+v000001f780c95ec0_0 .net "q", 0 0, L_000001f780c39480;  1 drivers
+v000001f780c96500_0 .net "r", 0 0, L_000001f780c395d0;  1 drivers
+v000001f780c959c0_0 .net "s", 0 0, L_000001f780c39560;  1 drivers
+v000001f780c965a0_0 .net "s1", 0 0, v000001f780c95920_0;  alias, 1 drivers
+v000001f780c961e0_0 .net "s2", 0 0, v000001f780c982d0_0;  alias, 1 drivers
+S_000001f780c4a490 .scope module, "tb" "tb_mux1b4to1" 2 32, 2 14 0, S_000001f780c3afa0;
+ .timescale 0 0;
+    .port_info 0 /OUTPUT 1 "a";
+    .port_info 1 /OUTPUT 1 "b";
+    .port_info 2 /OUTPUT 1 "c";
+    .port_info 3 /OUTPUT 1 "d";
+    .port_info 4 /OUTPUT 1 "s1";
+    .port_info 5 /OUTPUT 1 "s2";
+    .port_info 6 /INPUT 1 "e";
+v000001f780c96280_0 .var "a", 0 0;
+v000001f780c963c0_0 .var "b", 0 0;
+v000001f780c96460_0 .var "c", 0 0;
+v000001f780c96780_0 .var "d", 0 0;
+v000001f780c95880_0 .net "e", 0 0, L_000001f780c990f0;  alias, 1 drivers
+v000001f780c95920_0 .var "s1", 0 0;
+v000001f780c982d0_0 .var "s2", 0 0;
+    .scope S_000001f780c4a490;
+T_0 ;
+    %vpi_call 2 20 "$monitor", $time, " ", " ", "a=%b b=%b c=%b d=%b s1=%b s2=%b e=%b", v000001f780c96280_0, v000001f780c963c0_0, v000001f780c96460_0, v000001f780c96780_0, v000001f780c95920_0, v000001f780c982d0_0, v000001f780c95880_0 {0 0 0};
+    %pushi/vec4 0, 0, 1;
+    %store/vec4 v000001f780c96280_0, 0, 1;
+    %pushi/vec4 1, 0, 1;
+    %store/vec4 v000001f780c963c0_0, 0, 1;
+    %pushi/vec4 0, 0, 1;
+    %store/vec4 v000001f780c96460_0, 0, 1;
+    %pushi/vec4 1, 0, 1;
+    %store/vec4 v000001f780c96780_0, 0, 1;
+    %pushi/vec4 0, 0, 1;
+    %store/vec4 v000001f780c95920_0, 0, 1;
+    %pushi/vec4 0, 0, 1;
+    %store/vec4 v000001f780c982d0_0, 0, 1;
+    %delay 5, 0;
+    %pushi/vec4 0, 0, 1;
+    %store/vec4 v000001f780c95920_0, 0, 1;
+    %pushi/vec4 1, 0, 1;
+    %store/vec4 v000001f780c982d0_0, 0, 1;
+    %delay 5, 0;
+    %pushi/vec4 1, 0, 1;
+    %store/vec4 v000001f780c95920_0, 0, 1;
+    %pushi/vec4 0, 0, 1;
+    %store/vec4 v000001f780c982d0_0, 0, 1;
+    %delay 5, 0;
+    %pushi/vec4 1, 0, 1;
+    %store/vec4 v000001f780c95920_0, 0, 1;
+    %pushi/vec4 1, 0, 1;
+    %store/vec4 v000001f780c982d0_0, 0, 1;
+    %delay 5, 0;
+    %vpi_call 2 25 "$finish" {0 0 0};
+    %end;
+    .thread T_0;
+# The file index is used to find the file name in the following table.
+:file_names 3;
+    "N/A";
+    "<interactive>";
+    "a.v";
