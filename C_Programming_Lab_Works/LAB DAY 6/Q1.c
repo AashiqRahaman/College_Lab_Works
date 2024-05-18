@@ -10,21 +10,21 @@ void main()
         {
             if (i == 1)
             {
-                printf("%d", k);
+                printf("%d ", k);
                 k++;
             }
             else if (j == i)
             {
-                printf("%d", c);
+                printf("%d ", c);
             }
             else if (j == c)
             {
-                printf("%d", l);
+                printf("%d ", l);
                 l++;
             }
             else
             {
-                printf(" ");
+                printf("  ");
             }
         }
         printf("\n");
