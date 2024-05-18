@@ -2,7 +2,8 @@
 
 int main()
 {
-    int n, i, j, k, count, c[1000];
+    int n, i, j, k, count;
+    // int c[1000];
     printf("Please Declear the Length of the Array: ");
     scanf("%d", &n);
     int arr[n];
@@ -24,8 +25,8 @@ int main()
                     arr[k] = -1;
                 }
             }
-            c[j] = count;
-            printf("%d occurs %d times\n", arr[j], c[j]);
+            // c[j] = count;
+            printf("%d occurs %d times\n", arr[j], count);
         }
     }
     return 0;
