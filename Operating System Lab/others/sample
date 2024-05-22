@@ -1,0 +1,4 @@
+#to create fome file in a specific directory
+
+for i in {a..z} ; do touch "${i}.jpg" ; done
+for i in {a..z} ; do touch "${RANDOM}.jpg" ; done
