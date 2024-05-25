@@ -8,12 +8,17 @@ module d_flip_flop (
     output reg q
 );
 
-always @(posedge clk) begin
-    if (reset) begin
-        q <= 1'b0; 
-    end else if (en) begin
-        q <= d;
-    end
+always @(posedge clk) 
+begin
+    if (reset) 
+        begin
+            q <= 1'b0; 
+        end
+    else 
+        if (en) 
+            begin
+                q <= d;
+            end
 end
 
 endmodule

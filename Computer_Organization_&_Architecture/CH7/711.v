@@ -12,7 +12,7 @@ module dff (
     if (!reset) begin 
       q <= 0; 
     end else begin 
-      q <= d;
+      q <= D;
     end
   end
 endmodule
