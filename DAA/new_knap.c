@@ -1,29 +1,27 @@
 #include <stdio.h>
-#include <stdlib.h>
+
 struct Item
 {
     int value;
     int weight;
     double ratio;
 };
-void swap(Item* a, Item* b) {
-    Item temp = *a;
+void swap(struct Item *a, struct Item *b)
+{
+    struct Item temp = *a;
     *a = *b;
     *b = temp;
 }
 
-// int compare(const void *a, const void *b)
-// {
-//     struct Item *item1 = (struct Item *)a;
-//     struct Item *item2 = (struct Item *)b;
-//     return (item2->ratio - item1->ratio) > 0 ? 1 : -1;
-// }
-
-void sortItems(struct Item items[], int n) {
-    for (int i = 0; i < n-1; i++) {
-        for (int j = 0; j < n-i-1; j++) {
-            if (items[j].ratio < items[j+1].ratio) {
-                swap(&items[j], &items[j+1]);
+void sortItems(struct Item items[], int n)
+{
+    for (int i = 0; i < n - 1; i++)
+    {
+        for (int j = 0; j < n - i - 1; j++)
+        {
+            if (items[j].ratio < items[j + 1].ratio)
+            {
+                swap(&items[j], &items[j + 1]);
             }
         }
     }
