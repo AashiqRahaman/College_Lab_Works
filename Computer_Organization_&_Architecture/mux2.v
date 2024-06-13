@@ -13,12 +13,13 @@ module mux1b4to1 (
     end
 endmodule
 
-module tb_mux1b4to1(
+module tb_mux1b4to1
+(
     output reg a, b, c, d,
     output reg [1:0]s,
-    input e
-);
-    initial begin
+    input e );
+    initial 
+    begin
         {a, b, c, d, s}= 6'b010100;
         #5 s=2'b01;
         #5 s=2'b10;

@@ -1,14 +1,17 @@
 #include <math.h>
 #include <stdio.h>
 
-void insertionSort(int arr[], int n)
+void insertionSort(float arr[], int n)
 {
-    int i, key, j;
-    for (i = 1; i < n; i++) {
+    int i, j;
+    float key;
+    for (i = 1; i < n; i++)
+    {
         key = arr[i];
         j = i - 1;
 
-        while (j >= 0 && arr[j] > key) {
+        while (j >= 0 && arr[j] > key)
+        {
             arr[j + 1] = arr[j];
             j = j - 1;
         }
@@ -16,21 +19,31 @@ void insertionSort(int arr[], int n)
     }
 }
 
-void printArray(int arr[], int n)
-{
-    int i;
-    for (i = 0; i < n; i++)
-        printf("%d ", arr[i]);
-    printf("\n");
-}
-
 int main()
 {
-    int arr[] = { 12, 11, 13, 5, 6 };
-    int n = sizeof(arr) / sizeof(arr[0]);
+    int n;
+    printf("Enter the number of elements: ");
+    scanf("%d", &n);
 
-    insertionSort(arr, n);
-    printArray(arr, n);
+    float a[n];
+    printf("Enter the elements:\n");
+    for (int i = 0; i < n; i++)
+    {
+        printf("Arr[%d]: ", i);
+        scanf("%f", &a[i]);
+    }
 
+    printf("\nOriginal array:\n");
+    for (int i = 0; i < n; i++)
+    {
+        printf("%.2f ", a[i]);
+    }
+
+    insertionSort(a, n);
+    printf("\nSorted array using Insertion Sort:\n");
+    for (int i = 0; i < n; i++)
+    {
+        printf("%.2f ", a[i]);
+    }
     return 0;
 }
