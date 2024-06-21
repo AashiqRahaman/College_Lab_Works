@@ -1,0 +1,152 @@
+$date
+	Fri Jun 21 16:16:53 2024
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	1s
+$end
+$scope module fsml_behavioral_tb $end
+$var wire 1 ! Dout $end
+$var parameter 32 " CLK_PERIOD $end
+$var reg 1 # Din $end
+$var reg 1 $ Reset $end
+$var reg 1 % clk $end
+$scope module DUT $end
+$var wire 1 # Din $end
+$var wire 1 $ Reset $end
+$var wire 1 % clk $end
+$var parameter 3 & DONE $end
+$var parameter 3 ' IDLE $end
+$var parameter 3 ( MIDWAY $end
+$var reg 1 ! Dout $end
+$var reg 3 ) next_state [2:0] $end
+$var reg 3 * state [2:0] $end
+$upscope $end
+$upscope $end
+$scope module fsml_behavioral_wb $end
+$var wire 1 + Dout $end
+$var reg 1 , Din $end
+$var reg 1 - Reset $end
+$var reg 1 . clk $end
+$scope module DUT $end
+$var wire 1 , Din $end
+$var wire 1 - Reset $end
+$var wire 1 . clk $end
+$var parameter 3 / DONE $end
+$var parameter 3 0 IDLE $end
+$var parameter 3 1 MIDWAY $end
+$var reg 1 + Dout $end
+$var reg 3 2 next_state [2:0] $end
+$var reg 3 3 state [2:0] $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+$comment Show the parameter values. $end
+$dumpall
+b10 1
+b1 0
+b100 /
+b10 (
+b1 '
+b100 &
+b1010 "
+$end
+#0
+$dumpvars
+b1 3
+b1 2
+0.
+1-
+x,
+0+
+b1 *
+b1 )
+x%
+1$
+x#
+0!
+$end
+#5
+1.
+#10
+0.
+#15
+1.
+#20
+0.
+0,
+0-
+0#
+0$
+#25
+1.
+#30
+0.
+b10 2
+1,
+#35
+b100 2
+b10 3
+1.
+#40
+0.
+b10 )
+0,
+1#
+#45
+b1 2
+b100 3
+1.
+#50
+0.
+1+
+1,
+#55
+0+
+b10 2
+b1 3
+1.
+#60
+0.
+b1 2
+b1 )
+0,
+0#
+#65
+1.
+#70
+0.
+b10 2
+1,
+#75
+b100 2
+b10 3
+1.
+#80
+0.
+b10 )
+0,
+1#
+#85
+b1 2
+b100 3
+1.
+#90
+0.
+#95
+b1 3
+1.
+#100
+0.
+b1 )
+0#
+#105
+1.
+#110
+0.
+#115
+1.
+#120
+0.
