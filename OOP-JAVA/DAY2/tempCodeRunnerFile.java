@@ -1,7 +1,4 @@
-package DAY2;
-
 public class BankAccount {
-    // Instance variables
     private String depositorName;
     private String accountNumber;
     private String accountType;

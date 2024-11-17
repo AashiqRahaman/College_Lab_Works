@@ -6,7 +6,7 @@ class Triangle {
         this.side3 = side3;
     }
     double calculatePerimeter() {
-        System.out.println("Sides of Triangle are S1="+side1+", S2="+side2+", S3="+side3);
+        System.out.println("Sides of Triangle are S1 = "+side1+", S2 = "+side2+", S3 = "+side3);
         return side1 + side2 + side3;
     }
 }
@@ -18,7 +18,7 @@ class Rectangle {
         this.width = width;
     }
     double calculatePerimeter() {
-        System.out.println("Rectangle's Length ="+length+", Width="+width);
+        System.out.println("Rectangle's Length = "+length+", Width= "+width);
         return 2 * (length + width);
     }
 }
@@ -28,7 +28,7 @@ class Square {
         this.side = side;
     }
     double calculatePerimeter() {
-        System.out.println("Triangle's Side ="+side);
+        System.out.println("Triangle's Side = "+side);
         return 4 * side;
     }
 }
