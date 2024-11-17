@@ -4,3 +4,4 @@
 *.pdf
 *.exe
 backup.py
+*.class
