@@ -13,6 +13,8 @@ INSERT INTO Branch (branchNo, street, city, postcode) VALUES
 ('B004', '32 Manse Rd', 'Bristol', 'BS99 1NZ'),
 ('B002', '56 Clover Dr', 'London', 'NW10 6EU');
 
+SELECT * FROM Branch;
+
 -- Staff Table
 CREATE TABLE Staff (
     staffNo VARCHAR(5) PRIMARY KEY,
@@ -26,6 +28,7 @@ CREATE TABLE Staff (
     FOREIGN KEY (branchNo) REFERENCES Branch(branchNo)
 );
 
+
 INSERT INTO Staff (staffNo, fName, lName, position, sex, DOB, salary, branchNo) VALUES 
 ('SL21', 'John', 'White', 'Manager', 'M', '1945-10-01', 30000, 'B005'), 
 ('SG37', 'Ann', 'Beech', 'Assistant', 'F', '1960-11-10', 12000, 'B003'),
@@ -33,6 +36,9 @@ INSERT INTO Staff (staffNo, fName, lName, position, sex, DOB, salary, branchNo) 
 ('SA9', 'Mary', 'Howe', 'Assistant', 'F', '1970-02-19', 9000, 'B007'),
 ('SG5', 'Susan', 'Brand', 'Manager', 'F', '1940-06-03', 24000, 'B003'), 
 ('SL41', 'Julie', 'Lee', 'Assistant', 'F', '1965-06-13', 9000, 'B005');
+
+
+SELECT * FROM Staff;
 
 -- Registration Table
 CREATE TABLE Registration (
@@ -46,11 +52,15 @@ CREATE TABLE Registration (
     FOREIGN KEY (staffNo) REFERENCES Staff(staffNo)
 );
 
-INSERT INTO Registration VALUES 
+
+INSERT INTO Registration (clientNo,branchNo,staffNo,dateJoined) VALUES 
 ('CR76', 'B005', 'SL41', '2004-01-02'), 
 ('CR56', 'B003', 'SG37', '2003-04-11'), 
 ('CR74', 'B003', 'SG37', '2002-11-16'), 
 ('CR62', 'B007', 'SA9', '2003-03-07');
+
+
+SELECT * FROM Registration;
 
 -- PropertyForRent Table
 CREATE TABLE PropertyForRent (
@@ -76,6 +86,9 @@ INSERT INTO PropertyForRent (propertyNo, street, city, postcode, type, rooms, re
 ('PG21', '18 Dale Rd', 'Glasgow', 'G12', 'House', 5, 600, 'CO87', 'SG37', 'B003'),
 ('PG16', '5 Novar Dr', 'Glasgow', 'G12 9AX', 'Flat', 4, 450, 'CO93', 'SG14', 'B003');
 
+SELECT * FROM PropertyForRent;
+
+
 -- Client Table
 CREATE TABLE Client (
     clientNo VARCHAR(5) PRIMARY KEY,
@@ -92,6 +105,8 @@ INSERT INTO Client (clientNo, fName, lName, telNo, prefType, maxRent) VALUES
 ('CR74', 'Mike', 'Ritchie', '01475-392178', 'House', 750),
 ('CR62', 'Mary', 'Tregear', '01224-196720', 'Flat', 600);
 
+SELECT * FROM Client;
+
 -- PrivateOwner Table
 CREATE TABLE PrivateOwner (
     ownerNo VARCHAR(5) PRIMARY KEY,
@@ -106,6 +121,8 @@ INSERT INTO PrivateOwner (ownerNo, fName, lName, address, telNo) VALUES
 ('CO87', 'Carol', 'Farrel', '6 Achray St, Glasgow G32 9DX', '0141-357-7419'),
 ('CO40', 'Tina', 'Murphy', '63 Well St, Glasgow G42', '0141-943-1728'),
 ('CO93', 'Tony', 'Shaw', '12 Park Pl, Glasgow G4 0QR', '0141-225-7025');
+
+SELECT * FROM PrivateOwner;
 
 -- Viewing Table
 CREATE TABLE Viewing (
@@ -125,3 +142,63 @@ INSERT INTO Viewing (clientNo, propertyNo, viewDate, comment) VALUES
 ('CR62', 'PA14', '2004-05-14', 'too small'),
 ('CR56', 'PG36', '2004-04-28', 'no dining room');
 
+SELECT * FROM Viewing;
+
+--List full details of all staff.
+--1.list full details of Staff
+SELECT * FROM staff;
+
+--2.Produce a list of salaries for all staff, showing only the staff number, the first and last names, and the salary details.
+SELECT staffNo, FName, LName, salary FROM staff;
+
+--3.Produce a list of monthly salaries for all staff, showing the staff number, the first and last names, and the salary details.
+SELECT StaffNo, FName, LName, salary / 12 AS monthly_salary FROM Staff;
+
+--4.List all staff with a salary greater than £10,000.
+SELECT * FROM Staff WHERE salary > 10000;
+
+--5.List all staff with a salary between £20,000 and £30,000.
+SELECT * FROM Staff WHERE salary BETWEEN 20000 AND 30000;
+
+--6.Produce a list of salaries for all staff, showing only the staff number, name, and salary details.
+SELECT StaffNo, CONCAT(fName, ' ', lName) AS Name, salary FROM Staff;
+
+--7.List all managers and supervisors.
+SELECT * FROM Staff WHERE position IN ('Manager', 'Supervisor');
+
+--8.List all cities where there is either a branch office or a property for rent.
+SELECT DISTINCT city FROM Branch
+UNION
+SELECT DISTINCT city FROM PropertyForRent;
+
+--9.List all cities where there is a branch office but no properties for rent.
+SELECT city FROM Branch
+WHERE city NOT IN (SELECT city FROM PropertyForRent);
+
+--10.List all cities where there is both a branch office and at least one property for rent.
+SELECT city FROM Branch
+WHERE city IN (SELECT city FROM PropertyForRent);
+
+
+
+--Day 2
+--11,List the names and comments of all clients who have viewed a property for rent.
+SELECT Client.fName, Client.lName, Viewing.comment
+FROM Viewing
+JOIN Client ON Viewing.clientNo = Client.clientNo;
+
+--12.Produce a status report on property Viewings.
+SELECT propertyNo, COUNT(clientNo) AS num_viewings, COUNT(comment) AS num_comments
+FROM Viewing
+GROUP BY propertyNo;
+
+--13.List complete details of all staff who work at the branch in Glasgow.
+SELECT Staff.* FROM Staff
+JOIN Branch ON Staff.branchNo = Branch.branchNo
+WHERE Branch.city = 'Glasgow';
+
+--14.Find all owners with the string 'Glasgow' in their address.
+SELECT * FROM Owner WHERE address LIKE '%Glasgow%';
+
+--15,How many properties cost more than £350 per month to rent?
+SELECT COUNT(*) FROM property WHERE rent > 350;
