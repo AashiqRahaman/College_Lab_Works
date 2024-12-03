@@ -138,11 +138,12 @@ CREATE TABLE Viewing (
 INSERT INTO Viewing (clientNo, propertyNo, viewDate, comment) VALUES
 ('CR56', 'PA14', '2004-05-24', 'too small'),
 ('CR76', 'PG4', '2004-04-20', 'too remote'),
-('CR56', 'PG4', '2004-04-26', 'no dining room'),
-('CR62', 'PA14', '2004-05-14', 'too small'),
-('CR56', 'PG36', '2004-04-28', 'no dining room');
+('CR56', 'PG4', '2004-04-26', NULL),
+('CR62', 'PA14', '2004-05-14', 'no dining room'),
+('CR56', 'PG36', '2004-04-28', NULL);
 
 SELECT * FROM Viewing;
+
 
 --List full details of all staff.
 --1.list full details of Staff
@@ -198,7 +199,34 @@ JOIN Branch ON Staff.branchNo = Branch.branchNo
 WHERE Branch.city = 'Glasgow';
 
 --14.Find all owners with the string 'Glasgow' in their address.
-SELECT * FROM Owner WHERE address LIKE '%Glasgow%';
+SELECT * FROM PrivateOwner WHERE address LIKE '%Glasgow%';
 
 --15,How many properties cost more than £350 per month to rent?
-SELECT COUNT(*) FROM property WHERE rent > 350;
+SELECT COUNT(*) FROM PropertyForRent WHERE rent > 350;
+
+#16 Find the minimum, maximum, and average staff salary.
+SELECT 
+    MIN(salary), 
+    MAX(salary), 
+    AVG(salary)
+FROM Staff;
+
+#17 Find the number of staff working in each branch and the sum of their salaries.
+SELECT branchNo, 
+    COUNT(*) AS NumberOfStaff, 
+    SUM(salary) AS TotalSalary
+FROM Staff
+GROUP BY branchNo;
+
+#18 List the details of all viewings on property PG4 where a comment has not been supplied.
+SELECT * FROM Viewing
+WHERE propertyNo = 'PG4' AND comment IS NULL;
+
+#19 Produce a list of salaries for all staff
+SELECT CONCAT(fName,' ', lName) AS StaffName, salary 
+FROM Staff
+ORDER BY salary DESC;
+
+#20 Produce a list of properties arranged in order of property type. 
+SELECT * FROM PropertyForRent
+ORDER BY type;
