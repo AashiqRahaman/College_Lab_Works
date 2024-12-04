@@ -146,6 +146,9 @@ INSERT INTO Viewing (clientNo, propertyNo, viewDate, comment) VALUES
 DROP TABLE viewing;
 SELECT * FROM Viewing;
 
+SELECT COUNT(*)
+FROM viewing;
+
 show tables;
 DESC viewing;
 
