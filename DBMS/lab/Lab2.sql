@@ -146,9 +146,14 @@ INSERT INTO Viewing (clientNo, propertyNo, viewDate, comment) VALUES
 DROP TABLE viewing;
 SELECT * FROM Viewing;
 
+show tables;
+DESC viewing;
+
+
 
 --List full details of all staff.
 --1.list full details of Staff
+
 SELECT * FROM staff;
 
 --2.Produce a list of salaries for all staff, showing only the staff number, the first and last names, and the salary details.
@@ -190,14 +195,14 @@ SELECT Client.fName, Client.lName, Viewing.comment
 FROM Viewing
 JOIN Client ON Viewing.clientNo = Client.clientNo;
 
---12.Produce a status report on property Viewings.
-SELECT 
-    V.clientNo, CONCAT(C.fName, ' ', C.lName) AS clientName, 
-    V.propertyNo, P.street, P.city, 
-    V.viewDate, V.comment
-FROM Viewing V
-JOIN Client C ON V.clientNo = C.clientNo
-JOIN PropertyForRent P ON V.propertyNo = P.propertyNo;
+-- --12.Produce a status report on property Viewings.
+-- SELECT 
+--     V.clientNo, CONCAT(C.fName, ' ', C.lName) AS clientName, 
+--     V.propertyNo, P.street, P.city, 
+--     V.viewDate, V.comment
+-- FROM Viewing V
+-- JOIN Client C ON V.clientNo = C.clientNo
+-- JOIN PropertyForRent P ON V.propertyNo = P.propertyNo;
 
 --13.List complete details of all staff who work at the branch in Glasgow.
 SELECT Staff.* FROM Staff
