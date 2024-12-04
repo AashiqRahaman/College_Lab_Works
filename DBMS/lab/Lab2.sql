@@ -142,6 +142,8 @@ INSERT INTO Viewing (clientNo, propertyNo, viewDate, comment) VALUES
 ('CR62', 'PA14', '2004-05-14', 'no dining room'),
 ('CR56', 'PG36', '2004-04-28', NULL);
 
+
+DROP TABLE viewing;
 SELECT * FROM Viewing;
 
 
@@ -189,9 +191,13 @@ FROM Viewing
 JOIN Client ON Viewing.clientNo = Client.clientNo;
 
 --12.Produce a status report on property Viewings.
-SELECT propertyNo, COUNT(clientNo) AS num_viewings, COUNT(comment) AS num_comments
-FROM Viewing
-GROUP BY propertyNo;
+SELECT 
+    V.clientNo, CONCAT(C.fName, ' ', C.lName) AS clientName, 
+    V.propertyNo, P.street, P.city, 
+    V.viewDate, V.comment
+FROM Viewing V
+JOIN Client C ON V.clientNo = C.clientNo
+JOIN PropertyForRent P ON V.propertyNo = P.propertyNo;
 
 --13.List complete details of all staff who work at the branch in Glasgow.
 SELECT Staff.* FROM Staff
@@ -230,3 +236,34 @@ ORDER BY salary DESC;
 #20 Produce a list of properties arranged in order of property type. 
 SELECT * FROM PropertyForRent
 ORDER BY type;
+
+#21 How many different properties were viewed in May 2004?
+SELECT COUNT(DISTINCT propertyNo) AS PropertiesViewedInMay2004 FROM Viewing
+WHERE MONTH(viewDate) = 05 AND YEAR(viewDate) = 2004;
+
+#22 Find the total number of Managers and the sum of their salaries
+SELECT 
+    COUNT(*) AS TotalManagers, 
+    SUM(salary) AS TotalManagerSalaries
+FROM Staff
+WHERE position = 'Manager';
+
+#23 For each branch office with more than one member of staff, find the number of staff working in each branch and the sum of their salaries.
+SELECT 
+    branchNo,
+    COUNT(*) AS StaffCount, 
+    SUM(salary) AS TotalSalary
+FROM Staff
+GROUP BY branchNo
+HAVING COUNT(*) > 1;
+
+#24 List the staff who work in the branch at 163 Main St.
+SELECT * FROM Staff
+WHERE branchNo = (SELECT branchNo FROM Branch WHERE street = '163 Main St');
+
+#25 List all staff whose salary is greater than the average salary, and show by how much their salary is greater
+SELECT 
+    fName, lName, salary, 
+    salary - (SELECT AVG(salary) FROM Staff) AS DeviationSalary
+FROM Staff
+WHERE salary > (SELECT AVG(salary) FROM Staff);
