@@ -8,9 +8,13 @@ public class AnagramCheck {
     public static void main(String[] args) {
         String str1 = "Listen";
         String str2 = "Silent";
+        System.out.println("Before sorting the input stings:");
+        System.out.println("str1: " + str1);
+        System.out.println("str2: " + str2);
 
         if (areAnagrams(str1, str2)) {
             System.out.println("Yes, the strings are anagrams.");
+
         } else {
             System.out.println("No, the strings are not anagrams.");
         }
@@ -27,8 +31,13 @@ public class AnagramCheck {
         char[] charArray1 = str1.toCharArray();
         char[] charArray2 = str2.toCharArray();
 
+        System.out.println("After Sortin the input stings accordingly:");
+
         Arrays.sort(charArray1);
+        System.out.println(charArray1);
         Arrays.sort(charArray2);
+        System.out.println(charArray2);
+        
 
         // Compare sorted arrays
         return Arrays.equals(charArray1, charArray2);
