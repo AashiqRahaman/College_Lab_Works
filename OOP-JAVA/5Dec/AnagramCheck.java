@@ -38,7 +38,6 @@ public class AnagramCheck {
         Arrays.sort(charArray2);
         System.out.println(charArray2);
         
-
         // Compare sorted arrays
         return Arrays.equals(charArray1, charArray2);
     }
