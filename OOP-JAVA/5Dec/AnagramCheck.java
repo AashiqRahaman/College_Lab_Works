@@ -1,3 +1,7 @@
+// 1. Java String Program to Check Anagram Input: str1 = "Listen" str2 = "Silent" Output: Yes An anagram is a word or phrase formed by rearranging the letters of a different word or phrase, typically using all the original letters exactly once. 
+
+
+
 import java.util.Arrays;
 
 public class AnagramCheck {
@@ -13,16 +17,13 @@ public class AnagramCheck {
     }
 
     public static boolean areAnagrams(String str1, String str2) {
-        // Convert strings to lowercase and remove spaces (if needed)
         str1 = str1.toLowerCase();
         str2 = str2.toLowerCase();
 
-        // Check if lengths match
         if (str1.length() != str2.length()) {
             return false;
         }
 
-        // Convert to char arrays and sort
         char[] charArray1 = str1.toCharArray();
         char[] charArray2 = str2.toCharArray();
 
