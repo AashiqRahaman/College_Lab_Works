@@ -275,3 +275,135 @@ SELECT
     salary - (SELECT AVG(salary) FROM Staff) AS DeviationSalary
 FROM Staff
 WHERE salary > (SELECT AVG(salary) FROM Staff);
+
+
+-- #26 List all staff who work in the branch at 163 Main St, and show by how much their salary is greater than the average salary of staff in that branch
+
+-- SELECT 
+--     fName, lName, salary, 
+--     salary - (SELECT AVG(salary) FROM Staff WHERE branchNo = 'B003') AS DeviationSalary
+-- FROM Staff
+-- WHERE branchNo = 'B003';
+
+
+#26 List the properties that are handled by staff who work in the branch at 163 Main St.
+SELECT * FROM PropertyForRent
+WHERE staffNo IN (SELECT staffNo FROM Staff 
+                  WHERE branchNo = (SELECT branchNo FROM Branch 
+                                    WHERE street = '163 Main St')
+);
+
+#27 Find all staff whose salary is larger than the salary of at least one member of staff at branch B003.
+SELECT * 
+FROM Staff
+WHERE salary > (
+    SELECT MIN(salary) 
+    FROM Staff 
+    WHERE branchNo = 'B003'
+);
+
+#27(another Way)
+SELECT * 
+FROM Staff
+WHERE salary > ANY (
+    SELECT salary 
+    FROM Staff 
+    WHERE branchNo = 'B003'
+);
+
+#28 Find all staff whose salary is larger than the salary of every member of staff at branch B003.
+SELECT * 
+FROM Staff
+WHERE salary > ALL (
+    SELECT salary 
+    FROM Staff 
+    WHERE branchNo = 'B003'
+);
+
+#29
+#Same as Q.11
+SELECT * FROM Staff;
+
+#30,31 For each branch, list the numbers and names of staff who manage properties, including the city in which the branch is located and the properties that the staff manage. 
+SELECT 
+    Branch.branchNo, Branch.city, Staff.staffNo, CONCAT(Staff.fName, ' ', Staff.lName) AS StaffName, PropertyForRent.propertyNo
+FROM Branch
+JOIN Staff ON Branch.branchNo = Staff.branchNo
+JOIN PropertyForRent ON Staff.staffNo = PropertyForRent.staffNo;
+
+#32 Find the number of properties handled by each staff member.
+SELECT staffNo, COUNT(propertyNo) AS PropertiesHandled
+FROM PropertyForRent
+GROUP BY staffNo
+HAVING staffNo IS NOT NULL;
+
+#33 List all branch offices and any properties that are in the same city.
+SELECT  
+    Branch.city AS BranchCity,
+    GROUP_CONCAT(DISTINCT Branch.branchNo 
+                 ORDER BY Branch.branchNo 
+                 SEPARATOR ',') AS Branches,
+    PropertyForRent.city AS PropertyCity,
+    GROUP_CONCAT(DISTINCT PropertyForRent.propertyNo 
+                 ORDER BY PropertyForRent.propertyNo 
+                 SEPARATOR ',') AS Properties
+FROM Branch
+JOIN PropertyForRent ON Branch.city = PropertyForRent.city
+GROUP BY Branch.city
+ORDER BY Branch.city;
+
+#34 List the branch offices and properties that are in the same city along with any unmatched branches or properties. 
+SELECT 
+    Branch.city AS BranchCity,Branch.branchNo,
+    PropertyForRent.city AS PropertyCity,
+    PropertyForRent.propertyNo
+FROM Branch
+LEFT JOIN PropertyForRent ON Branch.city = PropertyForRent.city;
+
+
+#35.Write query to create a table OwnersPropertyCount (ownerNo, fName, lName,noOfProperty) and populate from the existing tables.
+CREATE TABLE OwnersPropertyCount(
+    ownerNo VARCHAR(5) PRIMARY KEY,
+    fName VARCHAR(20) NOT NULL,
+    lName VARCHAR(20) NOT NULL,
+    noOfProperty INT,
+    FOREIGN KEY (ownerNo) REFERENCES PrivateOwner(ownerNo)
+);
+
+INSERT INTO OwnersPropertyCount (ownerNo, fName, lName, noOfProperty)
+SELECT 
+    PrivateOwner.ownerNo, PrivateOwner.fName, PrivateOwner.lName, 
+    COUNT(PropertyForRent.propertyNo) AS noOfProperty
+FROM PrivateOwner
+LEFT JOIN PropertyForRent ON PrivateOwner.ownerNo = PropertyForRent.ownerNo
+GROUP BY PrivateOwner.ownerNo, PrivateOwner.fName, PrivateOwner.lName;
+
+select * from OwnersPropertyCount;
+
+#36.Give all staff a 3% pay increase.
+UPDATE Staff
+SET salary=(salary*1.03);
+SELECT * FROM Staff ORDER BY salary;
+
+#37.Give all Managers a 5% pay increase.
+UPDATE Staff
+SET salary=(salary/1.05)
+WHERE position = "Manager";
+SELECT * FROM Staff WHERE position = "Manager" ORDER BY salary;
+
+#38.Promote David Ford (staffNo 'SG14') to Manager and change his salary to £18,000
+UPDATE Staff
+SET salary=18000,position = "Manager"
+WHERE staffNo = "SG14";
+SELECT * FROM Staff WHERE position = "Manager";
+
+#39 Delete all viewings that relate to property PG4
+DELETE FROM viewing
+WHERE propertyNo = "PG4";
+
+SELECT * FROM viewing;
+
+#40.Delete all rows from the Viewing table
+DELETE FROM viewing
+WHERE propertyNo IS NOT NULL;
+SELECT * FROM viewing;
