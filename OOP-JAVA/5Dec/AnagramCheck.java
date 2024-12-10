@@ -18,6 +18,28 @@ public class AnagramCheck {
         } else {
             System.out.println("No, the strings are not anagrams.");
         }
+        asciistr (str1, str2);
+
+    }
+
+
+    public static int asciistr (String str1, String str2) {
+        int astr1 = 0;
+        int astr2 = 0;
+
+    
+        for (int i = 0; i < str1.length(); i++) {
+            astr1 = (int) str1.charAt(i);
+            System.out.println(str1.charAt(i)+ "\" is: " + astr1);
+        }
+        for (int i = 0; i < str2.length(); i++) {
+            astr2 = (int) str2.charAt(i);
+            System.out.println(str2.charAt(i)+ "\" is: " + astr2);
+        }
+
+       
+        return 0;
+    
     }
 
     public static boolean areAnagrams(String str1, String str2) {
