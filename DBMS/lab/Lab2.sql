@@ -138,7 +138,7 @@ CREATE TABLE Viewing (
 INSERT INTO Viewing (clientNo, propertyNo, viewDate, comment) VALUES
 ('CR56', 'PA14', '2004-05-24', 'too small'),
 ('CR76', 'PG4', '2004-04-20', 'too remote'),
-('CR56', 'PG4', '2004-04-26', NULL),
+('CR56', 'PG4', '2004-05-26', NULL),
 ('CR62', 'PA14', '2004-05-14', 'no dining room'),
 ('CR56', 'PG36', '2004-04-28', NULL);
 
@@ -226,7 +226,8 @@ SELECT
 FROM Staff;
 
 #17 Find the number of staff working in each branch and the sum of their salaries.
-SELECT branchNo, 
+SELECT 
+    branchNo, 
     COUNT(*) AS NumberOfStaff, 
     SUM(salary) AS TotalSalary
 FROM Staff
@@ -246,52 +247,80 @@ SELECT * FROM PropertyForRent
 ORDER BY type;
 
 #21 How many different properties were viewed in May 2004?
-SELECT COUNT(DISTINCT propertyNo) AS PropertiesViewedInMay2004 FROM Viewing
+SELECT COUNT(DISTINCT propertyNo) AS Prop_Visited_InMay2004 FROM Viewing
 WHERE MONTH(viewDate) = 05 AND YEAR(viewDate) = 2004;
 
 #22 Find the total number of Managers and the sum of their salaries
 SELECT 
     COUNT(*) AS TotalManagers, 
-    SUM(salary) AS TotalManagerSalaries
+    SUM(salary) AS ManagerSalariesSum
 FROM Staff
 WHERE position = 'Manager';
 
 #23 For each branch office with more than one member of staff, find the number of staff working in each branch and the sum of their salaries.
 SELECT 
     branchNo,
-    COUNT(*) AS StaffCount, 
+    Count(*) AS StaffCount, 
     SUM(salary) AS TotalSalary
 FROM Staff
 GROUP BY branchNo
-HAVING COUNT(*) > 1;
+HAVING COUNT(*) = 1;
+
+#OTHER SOL
+-- SELECT 
+--     branchNo,
+--     Count(*) AS StaffCount, 
+--     SUM(salary) AS TotalSalary
+-- FROM Staff
+-- WHERE StaffCount > 1
+-- GROUP BY branchNo;
+
 
 #24 List the staff who work in the branch at 163 Main St.
 SELECT * FROM Staff
-WHERE branchNo = (SELECT branchNo FROM Branch WHERE street = '163 Main St');
+WHERE branchNo IN (SELECT branchNo FROM Branch WHERE street = '163 Main St');
 
 #25 List all staff whose salary is greater than the average salary, and show by how much their salary is greater
 SELECT 
-    fName, lName, salary, 
-    salary - (SELECT AVG(salary) FROM Staff) AS DeviationSalary
+    fName, lName, salary, staffNo,
+    salary - (SELECT AVG(salary) FROM Staff) AS Extra_Ammount
 FROM Staff
 WHERE salary > (SELECT AVG(salary) FROM Staff);
 
-
--- #26 List all staff who work in the branch at 163 Main St, and show by how much their salary is greater than the average salary of staff in that branch
-
+-- alternative
 -- SELECT 
---     fName, lName, salary, 
---     salary - (SELECT AVG(salary) FROM Staff WHERE branchNo = 'B003') AS DeviationSalary
--- FROM Staff
--- WHERE branchNo = 'B003';
+--     fName, lName, salary, staffNo,
+--     salary - AVG(salary) AS Extra_Ammount
+--     FROM Staff
+-- WHERE salary > AVG(salary);
+
+
+-
 
 
 #26 List the properties that are handled by staff who work in the branch at 163 Main St.
 SELECT * FROM PropertyForRent
 WHERE staffNo IN (SELECT staffNo FROM Staff 
-                  WHERE branchNo = (SELECT branchNo FROM Branch 
+                  WHERE branchNo IN (SELECT branchNo FROM Branch 
                                     WHERE street = '163 Main St')
 );
+
+-- alternative 
+SELECT 
+    PropertyForRent.propertyNo,
+    PropertyForRent.street AS PropertyStreet,
+    PropertyForRent.city AS PropertyCity,
+    PropertyForRent.rent AS Rent
+FROM PropertyForRent
+JOIN Staff ON PropertyForRent.staffNo = Staff.staffNo
+JOIN Branch ON Staff.branchNo = Branch.branchNo
+WHERE Branch.street = '163 Main St';
+
+-- Alternative
+SELECT *
+FROM PropertyForRent
+JOIN Branch ON PropertyForRent.branchNo = Branch.branchNo
+WHERE Branch.street = '163 Main St';
 
 #27 Find all staff whose salary is larger than the salary of at least one member of staff at branch B003.
 SELECT * 
@@ -332,7 +361,7 @@ JOIN Staff ON Branch.branchNo = Staff.branchNo
 JOIN PropertyForRent ON Staff.staffNo = PropertyForRent.staffNo;
 
 #32 Find the number of properties handled by each staff member.
-SELECT staffNo, COUNT(propertyNo) AS PropertiesHandled
+SELECT staffNo, COUNT(propertyNo) AS HandledPropNo
 FROM PropertyForRent
 GROUP BY staffNo
 HAVING staffNo IS NOT NULL;
@@ -407,3 +436,12 @@ SELECT * FROM viewing;
 DELETE FROM viewing
 WHERE propertyNo IS NOT NULL;
 SELECT * FROM viewing;
+
+
+
+
+
+
+
+
+
