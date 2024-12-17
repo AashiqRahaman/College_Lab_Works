@@ -360,49 +360,90 @@ FROM Branch
 JOIN Staff ON Branch.branchNo = Staff.branchNo
 JOIN PropertyForRent ON Staff.staffNo = PropertyForRent.staffNo;
 
+
+-- Alternative
+SELECT 
+    Staff.branchNo, CONCAT(Staff.fName, ' ', Staff.lName) AS StaffName, GROUP_CONCAT(DISTINCT PropertyForRent.propertyNo ORDER BY PropertyForRent.propertyNo SEPARATOR ',')
+FROM Staff 
+JOIN PropertyForRent ON Staff.staffNo = PropertyForRent.staffNo GROUP BY Staff.branchNo,fName,lName ;
+-- Alternatively
+SELECT 
+    GROUP_CONCAT(DISTINCT Staff.branchNo SEPARATOR ','), CONCAT(Staff.fName, ' ', Staff.lName) AS StaffName, GROUP_CONCAT(DISTINCT PropertyForRent.propertyNo ORDER BY PropertyForRent.propertyNo SEPARATOR ',')
+FROM Staff 
+JOIN PropertyForRent ON Staff.staffNo = PropertyForRent.staffNo GROUP BY fName,lName ;
+
+
+
 #32 Find the number of properties handled by each staff member.
-SELECT staffNo, COUNT(propertyNo) AS HandledPropNo
-FROM PropertyForRent
+SELECT staffNo, COUNT(propertyNo) AS HandledPropNo FROM PropertyForRent
 GROUP BY staffNo
 HAVING staffNo IS NOT NULL;
 
 #33 List all branch offices and any properties that are in the same city.
 SELECT  
-    Branch.city AS BranchCity,
-    GROUP_CONCAT(DISTINCT Branch.branchNo 
-                 ORDER BY Branch.branchNo 
-                 SEPARATOR ',') AS Branches,
-    PropertyForRent.city AS PropertyCity,
-    GROUP_CONCAT(DISTINCT PropertyForRent.propertyNo 
-                 ORDER BY PropertyForRent.propertyNo 
-                 SEPARATOR ',') AS Properties
-FROM Branch
-JOIN PropertyForRent ON Branch.city = PropertyForRent.city
-GROUP BY Branch.city
-ORDER BY Branch.city;
+    Branch.city,
+    GROUP_CONCAT(DISTINCT Branch.branchNo ORDER BY Branch.branchNo SEPARATOR ',') 
+    AS Branches, PropertyForRent.city AS PropertyCity,
+    GROUP_CONCAT(DISTINCT PropertyForRent.propertyNo ORDER BY PropertyForRent.propertyNo SEPARATOR ',') 
+    AS Properties FROM Branch
+LEFT JOIN PropertyForRent ON Branch.city = PropertyForRent.city
+GROUP BY Branch.city ORDER BY Branch.city;
+SELECT  
+    b.city,GROUP_CONCAT(DISTINCT b.branchNo SEPARATOR ',') AS Branches,
+     p.city AS pCity,GROUP_CONCAT(DISTINCT p.propertyNo SEPARATOR ',') AS Properties
+FROM Branch b LEFT JOIN PropertyForRent p ON b.city = p.city
+GROUP BY b.city ORDER BY b.city;
+
+#ALTERNATIVE
+SELECT 
+    b.city AS bCity,b.branchNo,
+    p.city AS pCity , p.propertyNo
+FROM Branch b LEFT JOIN PropertyForRent p ON b.city = p.city;
+
 
 #34 List the branch offices and properties that are in the same city along with any unmatched branches or properties. 
 SELECT 
-    Branch.city AS BranchCity,Branch.branchNo,
-    PropertyForRent.city AS PropertyCity,
-    PropertyForRent.propertyNo
-FROM Branch
-LEFT JOIN PropertyForRent ON Branch.city = PropertyForRent.city;
+    Branch.city AS bCity,Branch.branchNo,
+    PropertyForRent.city AS pCity , PropertyForRent.propertyNo
+FROM Branch LEFT JOIN PropertyForRent  ON Branch.city = PropertyForRent.city
+UNION SELECT 
+    Branch.city AS bCity,Branch.branchNo,
+    PropertyForRent.city AS pCity , PropertyForRent.propertyNo
+FROM Branch RIGHT JOIN PropertyForRent ON Branch.city = PropertyForRent.city;
+#alternative
+SELECT b.city AS bCity,b.branchNo, p.city AS pCity , p.propertyNo
+FROM Branch b LEFT JOIN PropertyForRent p ON b.city = p.city
+UNION SELECT b.city AS bCity,b.branchNo, p.city AS pCity , p.propertyNo
+FROM Branch b RIGHT JOIN PropertyForRent p ON b.city = p.city;
+#ALTERNATIVE
+SELECT  
+    Branch.city,
+    GROUP_CONCAT(DISTINCT Branch.branchNo ORDER BY Branch.branchNo SEPARATOR ',') 
+    AS Branches, PropertyForRent.city AS PropertyCity,
+    GROUP_CONCAT(DISTINCT PropertyForRent.propertyNo ORDER BY PropertyForRent.propertyNo SEPARATOR ',') 
+    AS Properties FROM Branch
+LEFT JOIN PropertyForRent ON Branch.city = PropertyForRent.city
+GROUP BY Branch.city ORDER BY Branch.city;
+
+
 
 
 #35.Write query to create a table OwnersPropertyCount (ownerNo, fName, lName,noOfProperty) and populate from the existing tables.
 CREATE TABLE OwnersPropertyCount(
-    ownerNo VARCHAR(5) PRIMARY KEY,
-    fName VARCHAR(20) NOT NULL,
-    lName VARCHAR(20) NOT NULL,
-    noOfProperty INT,
-    FOREIGN KEY (ownerNo) REFERENCES PrivateOwner(ownerNo)
-);
+    ownerNo VARCHAR(5) PRIMARY KEY, fName VARCHAR(20) NOT NULL,lName VARCHAR(20) NOT NULL, noOfProperty INT,
+    FOREIGN KEY (ownerNo) REFERENCES PrivateOwner(ownerNo) );
 
+-- INSERT INTO OwnersPropertyCount (ownerNo, fName, lName, noOfProperty)
+-- SELECT 
+--     PrivateOwner.ownerNo, PrivateOwner.fName, PrivateOwner.lName, 
+--     COUNT(PropertyForRent.propertyNo) AS noOfProperty
+-- FROM PrivateOwner
+-- LEFT JOIN PropertyForRent ON PrivateOwner.ownerNo = PropertyForRent.ownerNo
+-- GROUP BY PrivateOwner.ownerNo, PrivateOwner.fName, PrivateOwner.lName;
 INSERT INTO OwnersPropertyCount (ownerNo, fName, lName, noOfProperty)
 SELECT 
-    PrivateOwner.ownerNo, PrivateOwner.fName, PrivateOwner.lName, 
-    COUNT(PropertyForRent.propertyNo) AS noOfProperty
+    PrivateOwner.ownerNo,fName,lName, 
+    COUNT(PropertyForRent.propertyNo) AS PropertyNumber
 FROM PrivateOwner
 LEFT JOIN PropertyForRent ON PrivateOwner.ownerNo = PropertyForRent.ownerNo
 GROUP BY PrivateOwner.ownerNo, PrivateOwner.fName, PrivateOwner.lName;
@@ -410,21 +451,32 @@ GROUP BY PrivateOwner.ownerNo, PrivateOwner.fName, PrivateOwner.lName;
 select * from OwnersPropertyCount;
 
 #36.Give all staff a 3% pay increase.
+-- UPDATE Staff
+-- SET salary=(salary*1.03);
+ALTER TABLE Staff
+ADD newSalary INT;
+
+-- ALTER TABLE Staff
+-- DROP COLUMN newSalary;
+
 UPDATE Staff
-SET salary=(salary*1.03);
-SELECT * FROM Staff ORDER BY salary;
+SET newSalary=(salary*1.03);
+SELECT CONCAT(fName," ",lName) AS staffName,salary,newSalary FROM Staff ORDER BY salary;
+
 
 #37.Give all Managers a 5% pay increase.
 UPDATE Staff
-SET salary=(salary/1.05)
+SET newSalary=(salary*1.05)
 WHERE position = "Manager";
-SELECT * FROM Staff WHERE position = "Manager" ORDER BY salary;
+SELECT CONCAT(fName," ",lName) AS staffName,salary,newSalary FROM Staff WHERE position = "Manager" ORDER BY salary;
 
 #38.Promote David Ford (staffNo 'SG14') to Manager and change his salary to £18,000
 UPDATE Staff
-SET salary=18000,position = "Manager"
+SET newSalary=18000,position = "Manager"
 WHERE staffNo = "SG14";
 SELECT * FROM Staff WHERE position = "Manager";
+SELECT CONCAT(fName," ",lName) AS staffName,salary,newSalary FROM Staff WHERE position = "Manager" ORDER BY salary;
+
 
 #39 Delete all viewings that relate to property PG4
 DELETE FROM viewing
@@ -440,8 +492,20 @@ SELECT * FROM viewing;
 
 
 
+-- test
 
 
 
 
+SELECT staffNo,city FROM Staff
+JOIN Branch ON Staff.branchNo = Branch.branchNo;
 
+SELECT Branch.city, Branch.branchNo, PropertyForRent.propertyNo
+FROM Branch
+LEFT JOIN PropertyForRent ON Branch.city = PropertyForRent.city
+
+UNION
+
+SELECT PropertyForRent.city, Branch.branchNo, PropertyForRent.propertyNo
+FROM PropertyForRent
+RIGHT JOIN Branch ON Branch.city = PropertyForRent.city;
