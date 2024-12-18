@@ -520,14 +520,20 @@ SELECT * FROM propertyforrent WHERE rent>400;
 SELECT branchNo, MAX(salary) AS maxsalary FROM Staff GROUP BY branchNo ;
 
 -- 46. find the second heighest salary of staff with designation.
+SELECT * FROM staff ORDER BY salary DESC LIMIT 1 OFFSET 1;
 -- 47. Find the date of joining for the heigest salary holder staff.
--- 48. Find the propertyNo, staffNo,branchNo andcomment fromthe appropriate tabls.
--- 49. count the staff no working in each branch.
+SELECT dateJoined FROM Staff s JOIN Registration r ON r.staffNo=s.staffNo ORDER BY salary DESC LIMIT 1 OFFSET 0;
+-- 48. Find the propertyNo, staffNo,branchNo and comment from the appropriate tabls.
+SELECT p.propertyNo,s.staffNo,p.branchNo,v.comment FROM staff s JOIN propertyforrent p ON p.staffNo=s.staffNo JOIN viewing v on v.propertyNo = p.propertyNo;
+-- 49. count the staff numbers working in each branch.
+SELECT branchNo , COUNT(staffNo) FROM staff GROUP BY branchNo; 
+
 
 
 
 
 -- 49. Find the staff who have been with the company for the longest period.
+SELECT * FROM staff s JOIN registration r ON s.staffNo = r.staffNo ORDER BY dateJoined ASC LIMIT 1 OFFSET 0 ;
 
 
 
