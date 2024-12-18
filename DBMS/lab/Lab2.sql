@@ -490,9 +490,48 @@ WHERE propertyNo IS NOT NULL;
 SELECT * FROM viewing;
 
 
+-- 41. Find Out staff Details who work for Same Branch which Have more than 1 Employee.
+SELECT branchNo,GROUP_CONCAT(DISTINCT staffNo SEPARATOR ',') AS Staffs_Number,COUNT(staffNo) AS staffnum FROM Staff  GROUP BY branchNo  HAVING (COUNT(staffNo)>1) ;
+
+-- Alternative
+SELECT *
+FROM Staff
+WHERE branchNo IN (SELECT branchNo
+FROM Staff Group BY branchNo
+HAVING COUNT(staffNo) > 1);
 
 
--- test
+-- 42.Create a View Which Display BranchNo,StaffNo.Position & ClientNo
+
+CREATE VIEW StaffDetails AS
+SELECT s.branchNo, s.staffNo, s.position, r.clientNo
+FROM Staff s join registration r ON s.staffNo=r.staffNo;
+SELECT * FROM staffdetails;
+-- 43.SHOW all details from Cross Product of Staff,Registration
+
+SELECT* FROM Staff CROSS JOIN Registration;
+-- Alternatively
+SELECT* FROM Staff JOIN Registration;
+
+-- 44.Find the Street & city of the Branch for ALL Clients whose Max Rent > 400
+SELECT * FROM propertyforrent WHERE rent>400;
+
+-- 45.Find the Max Salary For Each BranchNo
+SELECT branchNo, MAX(salary) AS maxsalary FROM Staff GROUP BY branchNo ;
+
+-- 46. find the second heighest salary of staff with designation.
+-- 47. Find the date of joining for the heigest salary holder staff.
+-- 48. Find the propertyNo, staffNo,branchNo andcomment fromthe appropriate tabls.
+-- 49. count the staff no working in each branch.
+
+
+
+
+-- 49. Find the staff who have been with the company for the longest period.
+
+
+
+-- test-----------------------------------------------------------------------------------------------------------------------------------
 
 
 
