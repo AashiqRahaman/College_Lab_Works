@@ -8,16 +8,6 @@ public class Initials{
    scanner.close();
    System.out.println("Initials: "+getInitials(name));
   }
-  //  public static String getInitials(String name){
-  //   String[] words=name.split("\\s+");
-  //   StringBuilder initials = new StringBuilder();
-  //   for(String word:words){
-  //   initials.append(word.charAt(0)).append(".");
-  //   }
-  //   return initials.toString().trim();
-  //  }
-  // }
-
   public static String getInitials(String name) {
     String[] words = name.split("\\s+");
     StringBuilder initials = new StringBuilder();
