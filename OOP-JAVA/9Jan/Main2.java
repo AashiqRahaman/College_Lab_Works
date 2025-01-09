@@ -6,7 +6,7 @@ abstract class Geometry {
 }
 
 class Circle extends Geometry {
-    private double radius;
+    final double radius;
 
     // Constructor
     public Circle(double radius) {
@@ -21,7 +21,7 @@ class Circle extends Geometry {
 }
 
 class Rectangle extends Geometry {
-    private double length, breadth;
+    final double length, breadth;
 
     // Constructor
     public Rectangle(double length, double breadth) {
