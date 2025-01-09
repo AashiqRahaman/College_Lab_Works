@@ -16,3 +16,8 @@ SELECT * FROM Staff,Registration;
 SELECT c.clientNo,c.fName,c.lName,b.branchNo, b.street,b.city FROM Client c
 JOIN Registration r ON c.clientNo = r.clientNo AND maxRent > 400
 JOIN Branch b ON r.branchNo = b.branchNo;
+
+-- 5.Find the Max Salary For Each BranchNo
+
+SELECT b.branchNo, MAX(s.salary) AS MaxSalary
+FROM Branch b JOIN Staff s ON b.branchNo = s.branchNo GROUP BY branchNo;

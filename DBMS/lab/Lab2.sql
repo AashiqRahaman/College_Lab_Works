@@ -514,7 +514,9 @@ SELECT* FROM Staff CROSS JOIN Registration;
 SELECT* FROM Staff JOIN Registration;
 
 -- 44.Find the Street & city of the Branch for ALL Clients whose Max Rent > 400
-SELECT * FROM propertyforrent WHERE rent>400;
+-- SELECT p.branchNo,,b.street,b.city, FROM propertyforrrent p
+-- JOIN branch b ON b.branchNo = p.branchNo   WHERE maxRent>400;
+SELECT b.street,b.city FROM client c join registration r ON c.clientNo=r.clientNo join branch b ON b.branchNo=r.branchNo WHERE maxRent>400;
 
 -- 45.Find the Max Salary For Each BranchNo
 SELECT branchNo, MAX(salary) AS maxsalary FROM Staff GROUP BY branchNo ;
@@ -528,11 +530,27 @@ SELECT p.propertyNo,s.staffNo,p.branchNo,v.comment FROM staff s JOIN propertyfor
 -- 49. count the staff numbers working in each branch.
 SELECT branchNo , COUNT(staffNo) FROM staff GROUP BY branchNo; 
 
+--50 . Alter staff and add location attribute with values
+-- (StaffNo Location) = SL21-> Paris; SG37-> Glasgow; SG14-> London; SG9-> Paris; SG5-> Glasgow; SL41-> London
+ALTER TABLE staff ADD COLUMN location VARCHAR(50);
+UPDATE staff
+SET location = CASE 
+    WHEN staffNo IN ('SL21', 'SA9') THEN 'Paris'
+    WHEN staffNo IN ('SG37', 'SG5') THEN 'Glasgow'
+    WHEN staffNo IN ('SG14', 'SL41') THEN 'London'
+    ELSE location
+END;
+SELECT * FROM staff ;
+
+-- 51. Find the staff details whose location and branchNo and city is same.
 
 
 
 
--- 49. Find the staff who have been with the company for the longest period.
+select * FROM staff WHERE (location ,branchNo) IN 
+(SELECT location,branchNo FROM staff GROUP BY location,branchNo HAVING COUNT(*)>1);
+
+-- add. Find the staff who have been with the company for the longest period.
 SELECT * FROM staff s JOIN registration r ON s.staffNo = r.staffNo ORDER BY dateJoined ASC LIMIT 1 OFFSET 0 ;
 
 
@@ -554,3 +572,14 @@ UNION
 SELECT PropertyForRent.city, Branch.branchNo, PropertyForRent.propertyNo
 FROM PropertyForRent
 RIGHT JOIN Branch ON Branch.city = PropertyForRent.city;
+
+
+
+select * from Staff s1 join  Staff ;
+ALTER TABLE Staff MODIFY fName VARCHAR(20);
+ALTER TABLE Staff MODIFY staffNo VARCHAR(40);
+DESCRIBE Staff;
+DESCRIBE REGISTRATION;
+
+
+
