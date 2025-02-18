@@ -220,9 +220,11 @@ SELECT COUNT(*) FROM PropertyForRent WHERE rent > 350;
 
 #16 Find the minimum, maximum, and average staff salary.
 SELECT 
+    count(*) as total_emp,
     MIN(salary), 
     MAX(salary), 
-    AVG(salary)
+    AVG(salary),
+    SUM(salary)
 FROM Staff;
 
 #17 Find the number of staff working in each branch and the sum of their salaries.

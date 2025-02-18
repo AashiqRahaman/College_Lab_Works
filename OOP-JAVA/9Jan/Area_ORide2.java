@@ -36,7 +36,7 @@ class Rectangle extends Geometry {
     }
 }
 
-public class Main2 {
+public class Area_ORide2 {
     public static void main(String[] args) {
         Geometry circle = new Circle(4.5); // Runtime polymorphism
         Geometry rectangle = new Rectangle(5, 7); // Runtime polymorphism
