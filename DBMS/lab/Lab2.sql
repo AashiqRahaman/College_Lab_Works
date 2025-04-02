@@ -181,13 +181,16 @@ SELECT * FROM Staff WHERE position IN ('Manager', 'Supervisor');
 SELECT DISTINCT city FROM Branch
 UNION
 SELECT DISTINCT city FROM PropertyForRent;
-
+-- test
+SELECT DISTINCT city FROM Branch group by city;
+SELECT DISTINCT city FROM Branch;
+-- SELECT * FROM Branch ;
 --9.List all cities where there is a branch office but no properties for rent.
 SELECT city FROM Branch
 WHERE city NOT IN (SELECT city FROM PropertyForRent);
 
 --10.List all cities where there is both a branch office and at least one property for rent.
-SELECT city FROM Branch
+SELECT distinct city FROM Branch
 WHERE city IN (SELECT city FROM PropertyForRent);
 
 
@@ -210,6 +213,14 @@ JOIN Client ON Viewing.clientNo = Client.clientNo;
 --13.List complete details of all staff who work at the branch in Glasgow.
 SELECT Staff.* FROM Staff
 JOIN Branch ON Staff.branchNo = Branch.branchNo
+WHERE Branch.city = 'Glasgow';
+-- test
+SELECT * FROM Staff
+JOIN Branch ON Staff.branchNo = Branch.branchNo
+WHERE Branch.city = 'Glasgow';
+
+SELECT * FROM Staff
+left JOIN Branch ON Staff.branchNo = Branch.branchNo
 WHERE Branch.city = 'Glasgow';
 
 --14.Find all owners with the string 'Glasgow' in their address.
@@ -266,7 +277,7 @@ SELECT
     SUM(salary) AS TotalSalary
 FROM Staff
 GROUP BY branchNo
-HAVING COUNT(*) = 1;
+HAVING COUNT(*) >= 1;
 
 #OTHER SOL
 -- SELECT 
@@ -281,13 +292,14 @@ HAVING COUNT(*) = 1;
 #24 List the staff who work in the branch at 163 Main St.
 SELECT * FROM Staff
 WHERE branchNo IN (SELECT branchNo FROM Branch WHERE street = '163 Main St');
-
+SELECT s.* FROM Staff s join Branch b on s.branchNo =b.branchNo where b.street = '163 Main St';
 #25 List all staff whose salary is greater than the average salary, and show by how much their salary is greater
 SELECT 
     fName, lName, salary, staffNo,
     salary - (SELECT AVG(salary) FROM Staff) AS Extra_Ammount
 FROM Staff
 WHERE salary > (SELECT AVG(salary) FROM Staff);
+
 
 -- alternative
 -- SELECT 
@@ -381,6 +393,7 @@ SELECT staffNo, COUNT(propertyNo) AS HandledPropNo FROM PropertyForRent
 GROUP BY staffNo
 HAVING staffNo IS NOT NULL;
 
+
 #33 List all branch offices and any properties that are in the same city.
 SELECT  
     Branch.city,
@@ -442,10 +455,11 @@ CREATE TABLE OwnersPropertyCount(
 -- FROM PrivateOwner
 -- LEFT JOIN PropertyForRent ON PrivateOwner.ownerNo = PropertyForRent.ownerNo
 -- GROUP BY PrivateOwner.ownerNo, PrivateOwner.fName, PrivateOwner.lName;
-INSERT INTO OwnersPropertyCount (ownerNo, fName, lName, noOfProperty)
+INSERT INTO OwnersPropertyCount (ownerNo, fName, lName, noOfProperty);
 SELECT 
     PrivateOwner.ownerNo,fName,lName, 
-    COUNT(PropertyForRent.propertyNo) AS PropertyNumber
+    COUNT(PropertyForRent.propertyNo) AS PropertyNumber,
+    group_concat(DISTINCT PropertyForRent.propertyNo SEPARATOR',')
 FROM PrivateOwner
 LEFT JOIN PropertyForRent ON PrivateOwner.ownerNo = PropertyForRent.ownerNo
 GROUP BY PrivateOwner.ownerNo, PrivateOwner.fName, PrivateOwner.lName;
@@ -556,6 +570,32 @@ select * FROM staff WHERE (location ,branchNo) IN
 SELECT * FROM staff s JOIN registration r ON s.staffNo = r.staffNo ORDER BY dateJoined ASC LIMIT 1 OFFSET 0 ;
 
 
+
+
+
+
+
+
+
+-- 52.Find room,type,rent,propertyno ,city,branchno, where postcode is same fro branchno & proprtyno
+SELECT pfr.propertyNo, pfr.city, pfr.branchNo, pfr.type, pfr.rooms, pfr.rent
+FROM PropertyForRent pfr JOIN Branch b ON pfr.postcode = b.postcode
+WHERE pfr.branchNo = b.branchNo;
+
+
+-- 53.Find the details of owners who have maximum property
+SELECT DISTINCT po.ownerNo, po.fName, po.lName, po.address, po.telNo
+FROM PrivateOwner po WHERE po.ownerNo
+=(SELECT pfr.ownerNo FROM PropertyForRent pfr GROUP BY pfr.ownerNo
+    ORDER BY COUNT(pfr.propertyNo) DESC LIMIT 1);
+
+-- 54.Find the details of client where fName starts with 'M'
+SELECT clientNo, fName, lName, telNo, prefType, maxRent
+FROM Client WHERE fName LIKE 'M%';
+
+-- 55.Find the owner details whose fName has 3 character
+SELECT ownerNo, fName, lName, address, telNo
+FROM PrivateOwner WHERE LENGTH(fName) = 3; 
 
 -- test-----------------------------------------------------------------------------------------------------------------------------------
 
