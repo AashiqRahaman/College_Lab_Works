@@ -1,72 +1,66 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
-#include <winsock2.h>
-#include <stdbool.h>  // Include for true/false constants
+#include <unistd.h>             // For close()
+#include <arpa/inet.h>          // For inet_ntoa, htons, etc.
+#include <sys/socket.h>         // For socket(), bind(), recvfrom(), sendto()
+#include <netinet/in.h>         // For sockaddr_in
+#include <stdbool.h>            // For bool, true, false
 
-int main(int argc, char *argv[]) {
-    // Port to start the server on
-    int SERVER_PORT = 8877;
+#define SERVER_PORT 1111
+#define BUFFER_SIZE 500
 
-    // Winsock initialization
-    WSADATA wsaData;
-    SOCKET sock;
-    struct sockaddr_in server_address;
-    struct sockaddr_in client_address;
-    int client_address_len = sizeof(client_address);
+int main() {
+    int sockfd;
+    struct sockaddr_in server_addr, client_addr;
+    socklen_t client_addr_len = sizeof(client_addr);
+    char buffer[BUFFER_SIZE];
 
-    // Initialize Winsock
-    if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0) {
-        printf("WSAStartup failed\n");
-        return 1;
+    // Create UDP socket
+    if ((sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
+        perror("Socket creation failed");
+        exit(EXIT_FAILURE);
     }
 
-    // Create a UDP socket
-    sock = socket(AF_INET, SOCK_DGRAM, 0);
-    if (sock == INVALID_SOCKET) {
-        printf("Could not create socket\n");
-        WSACleanup();
-        return 1;
+    // Zero out the server address
+    memset(&server_addr, 0, sizeof(server_addr));
+    server_addr.sin_family = AF_INET;
+    server_addr.sin_port = htons(SERVER_PORT);
+    server_addr.sin_addr.s_addr = INADDR_ANY;
+
+    // Bind the socket
+    if (bind(sockfd, (struct sockaddr*)&server_addr, sizeof(server_addr)) < 0) {
+        perror("Bind failed");
+        close(sockfd);
+        exit(EXIT_FAILURE);
     }
 
-    // Prepare the server address structure
-    memset(&server_address, 0, sizeof(server_address));
-    server_address.sin_family = AF_INET;
-    server_address.sin_port = htons(SERVER_PORT);
-    server_address.sin_addr.s_addr = htonl(INADDR_ANY);
+    printf("UDP server listening on port %d...\n", SERVER_PORT);
 
-    // Bind the socket to the address
-    if (bind(sock, (struct sockaddr *)&server_address, sizeof(server_address)) == SOCKET_ERROR) {
-        printf("Could not bind socket\n");
-        closesocket(sock);
-        WSACleanup();
-        return 1;
-    }
-
-    // Run indefinitely
-    while (true) {  // Now using 'true' after including stdbool.h
-        char buffer[500];
-
-        // Receive data from client
-        int len = recvfrom(sock, buffer, sizeof(buffer), 0, (struct sockaddr *)&client_address, &client_address_len);
-        if (len == SOCKET_ERROR) {
-            printf("Error receiving data\n");
+    // Server loop
+    while (true) {
+        int len = recvfrom(sockfd, buffer, BUFFER_SIZE - 1, 0,
+                           (struct sockaddr*)&client_addr, &client_addr_len);
+        if (len < 0) {
+            perror("Error receiving data");
             continue;
         }
 
-        // Null-terminate the received data
-        buffer[len] = '\0';
+        buffer[len] = '\0';  // Null-terminate received data
 
-        // Print the received message
-        printf("Received: '%s' from client %s\n", buffer, inet_ntoa(client_address.sin_addr));
+        printf("Received: '%s' from client %s:%d\n",
+               buffer,
+               inet_ntoa(client_addr.sin_addr),
+               ntohs(client_addr.sin_port));
 
-        // Send the same content back to the client (echo)
-        if (sendto(sock, buffer, len, 0, (struct sockaddr *)&client_address, sizeof(client_address)) == SOCKET_ERROR) {
-            printf("Error sending data\n");
+        // Echo the message back to the client
+        if (sendto(sockfd, buffer, len, 0,
+                   (struct sockaddr*)&client_addr, client_addr_len) < 0) {
+            perror("Error sending data");
         }
     }
 
-    // Cleanup
-    closesocket(sock);
-    WSACleanup();
+    // Cleanup (not reachable unless loop exits)
+    close(sockfd);
     return 0;
 }
