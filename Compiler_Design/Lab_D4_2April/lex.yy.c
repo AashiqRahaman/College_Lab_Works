@@ -367,41 +367,30 @@ static char *yy_last_accepting_cpos;
 #define YY_MORE_ADJ 0
 #define YY_RESTORE_YY_MORE_OFFSET
 char *yytext;
-#line 1 "symbol_table.l"
+#line 1 "s_table.l"
 #define INITIAL 0
-#line 2 "symbol_table.l"
+#line 2 "s_table.l"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-// Define size of the hash table
 #define SIZE 100
 
-// Define a struct for each symbol
 typedef struct Symbol {
-    char name[50];       // Name of the identifier
-    int address;         // Memory address assigned
-    struct Symbol *next; // For chaining (collision resolution)
+    char name[50];       
+    int address;         
+    struct Symbol *next; 
 } Symbol;
-
-// Hash table array of pointers to Symbol
 Symbol* symbolTable[SIZE];
 int next_address = 1000; // Starting address
-
-// Simple hash function (based on character sum)
 int hash(char* name) {
     int hashVal = 0;
     for (int i = 0; name[i] != '\0'; i++)
         hashVal += name[i];
     return hashVal % SIZE;
 }
-
-// Lookup or insert identifier into the symbol table
 int lookup_or_insert(char* name) {
-    int index = hash(name);              // Get hash index
-    Symbol* curr = symbolTable[index];  // Go to that bucket
-
-    // Check if already exists
+    int index = hash(name);              
+    Symbol* curr = symbolTable[index];  
     while (curr != NULL) {
         if (strcmp(curr->name, name) == 0) {
             printf("[FOUND] %s at address %d\n", name, curr->address);
@@ -409,20 +398,16 @@ int lookup_or_insert(char* name) {
         }
         curr = curr->next;
     }
-
-    // Not found → Insert
     Symbol* newSym = (Symbol*)malloc(sizeof(Symbol));
     strcpy(newSym->name, name);
     newSym->address = next_address;
-    next_address += 4; // Increment address by 4 bytes
+    next_address += 4; 
     newSym->next = symbolTable[index];
     symbolTable[index] = newSym;
-
     printf("[INSERTED] %s at address %d\n", name, newSym->address);
     return newSym->address;
 }
-// Don't look for yywrap() function
-#line 426 "lex.yy.c"
+#line 411 "lex.yy.c"
 
 /* Macros after this point can all be overridden by user definitions in
  * section 1.
@@ -584,9 +569,9 @@ YY_DECL
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
 
-#line 58 "symbol_table.l"
+#line 41 "s_table.l"
 
-#line 590 "lex.yy.c"
+#line 575 "lex.yy.c"
 
 	if ( yy_init )
 		{
@@ -671,25 +656,25 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 59 "symbol_table.l"
-{ lookup_or_insert(yytext); }  // Match identifiers
+#line 42 "s_table.l"
+{ lookup_or_insert(yytext); }  
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 60 "symbol_table.l"
-;  // Ignore whitespace
+#line 43 "s_table.l"
+;  
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 61 "symbol_table.l"
-;  // Ignore all other characters
+#line 44 "s_table.l"
+;  
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 62 "symbol_table.l"
+#line 45 "s_table.l"
 ECHO;
 	YY_BREAK
-#line 693 "lex.yy.c"
+#line 678 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1579,13 +1564,10 @@ int main()
 	return 0;
 	}
 #endif
-#line 62 "symbol_table.l"
-
+#line 45 "s_table.l"
 
 int main() {
     printf("Reading input file and building symbol table...\n");
-    yylex();  // Start lexical analysis
+    yylex(); 
     return 0;
 }
-
-

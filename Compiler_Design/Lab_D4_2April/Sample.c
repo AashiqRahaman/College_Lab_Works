@@ -1,17 +1,11 @@
-int x;
-float y;
-x = 10;
-y = 20.5;
 int main() {
-    int z;
-    z = x + y;
+    int count;
+    float total;
+    count = 10;
     return 0;
 }
 
 
-
-
-
-// flex symbol_table.l    
-// gcc lex.yy.c -o symtable
-// ./symtable < sample.c
+// lex s_table.l
+// gcc lex.yy.c -o st -lfl
+// ./st < Sample.c
