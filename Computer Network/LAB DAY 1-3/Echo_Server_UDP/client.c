@@ -8,8 +8,8 @@
 #include <sys/socket.h>         // For socket functions
 #include <netinet/in.h>         // For sockaddr_in
 
-#define SERVER_IP "10.10.127.255"
-#define SERVER_PORT 5555
+#define SERVER_IP "127.0.0.1"
+#define SERVER_PORT 9999
 #define BUFFER_SIZE 1024
 
 int main() {

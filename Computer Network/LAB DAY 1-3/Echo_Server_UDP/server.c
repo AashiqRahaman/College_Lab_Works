@@ -7,7 +7,7 @@
 #include <netinet/in.h>         // For sockaddr_in
 #include <stdbool.h>            // For bool, true, false
 
-#define SERVER_PORT 1111
+#define SERVER_PORT 9999
 #define BUFFER_SIZE 500
 
 int main() {
