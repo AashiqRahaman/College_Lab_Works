@@ -4,8 +4,6 @@
 
     int flag=0;
 
-   
-
 %}
 
 %token NUMBER
@@ -52,7 +50,7 @@ void main()
 
 {
 
-   printf("\nEnter Any Arithmetic Expression which can have operations Addition, Subtraction, Multiplication, Divison, Modulus and Round brackets:\n");
+   printf("\nWrite a Arithmetic Expression which may have operations like\nAddition, Subtraction, Multiplication, Divison, Modulus and Round brackets:\n");
 
    yyparse();
 
