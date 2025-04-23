@@ -1,6 +1,6 @@
 int main() {
     int count;
-    float total;
+    
     count = 10;
     return 0;
 }
