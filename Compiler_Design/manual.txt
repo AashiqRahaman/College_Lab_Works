@@ -1,0 +1,19 @@
+bison -d parcer.y
+
+
+flex lexer.l
+
+
+gcc parcer.tab.c lex.yy.c -o parser -lfl
+
+
+
+./parser < input.c
+
+
+
+
+3. Run the following commands for lex code:
+   - `lex lex.l` to generate the lexical analyzer (`lex.yy.c`).
+   - `gcc lex.yy.c -o lex_program -lfl` to compile the lexical analyzer into an executable named `lex_program`.
+   - `./lex_program input.c` to run the lexical analyzer on the input C program (`input.c`). Replace `input.c` with the path to your C program file.

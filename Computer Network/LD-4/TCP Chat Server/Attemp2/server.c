@@ -5,7 +5,7 @@
 #include <pthread.h>
 #include <arpa/inet.h>
 
-#define PORT 8000
+#define PORT 1111
 #define MAX_CLIENTS 10
 #define BUFFER_SIZE 1024
 
@@ -13,50 +13,41 @@ int client_sockets[MAX_CLIENTS];
 pthread_mutex_t clients_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 // XOR encryption function
-void xor_encrypt_decrypt(char *message)
-{
-    for (int i = 0; message[i]; i++)
-    {
-        message[i] ^= 39;
+void xor_encrypt_decrypt(char *message) {
+    for (int i = 0; message[i]; i++) {
+        message[i] ^= 100;
     }
 }
 
 // Broadcast encrypted message to all clients except sender
-void broadcast(char *message, int sender_sock)
-{
+void broadcast(char *message, int sender_sock) {
     pthread_mutex_lock(&clients_mutex);
-    for (int i = 0; i < MAX_CLIENTS; ++i)
-    {
-        if (client_sockets[i] != 0 && client_sockets[i] != sender_sock)
-        {
+    for (int i = 0; i < MAX_CLIENTS; ++i) {
+        if (client_sockets[i] != 0 && client_sockets[i] != sender_sock) {
             char temp[BUFFER_SIZE];
             strcpy(temp, message);
-            xor_encrypt_decrypt(temp); // Encrypt before sending
+            xor_encrypt_decrypt(temp);  // Encrypt before sending
             send(client_sockets[i], temp, strlen(temp), 0);
         }
     }
     pthread_mutex_unlock(&clients_mutex);
 }
 
-void *handle_client(void *arg)
-{
+void *handle_client(void *arg) {
     int sock = *(int *)arg;
     char buffer[BUFFER_SIZE];
     int bytes;
 
-    while ((bytes = recv(sock, buffer, sizeof(buffer) - 1, 0)) > 0)
-    {
+    while ((bytes = recv(sock, buffer, sizeof(buffer) - 1, 0)) > 0) {
         buffer[bytes] = '\0';
         printf("Received: %s", buffer);
-        broadcast(buffer, sock); // Relay to others
+        broadcast(buffer, sock);  // Relay to others
     }
 
     // Remove client
     pthread_mutex_lock(&clients_mutex);
-    for (int i = 0; i < MAX_CLIENTS; ++i)
-    {
-        if (client_sockets[i] == sock)
-        {
+    for (int i = 0; i < MAX_CLIENTS; ++i) {
+        if (client_sockets[i] == sock) {
             client_sockets[i] = 0;
             break;
         }
@@ -67,8 +58,7 @@ void *handle_client(void *arg)
     return NULL;
 }
 
-int main()
-{
+int main() {
     int server_fd, new_sock;
     struct sockaddr_in address;
     socklen_t addrlen = sizeof(address);
@@ -83,15 +73,12 @@ int main()
     listen(server_fd, MAX_CLIENTS);
     printf("Chat server started on port %d...\n", PORT);
 
-    while (1)
-    {
+    while (1) {
         new_sock = accept(server_fd, (struct sockaddr *)&address, &addrlen);
 
         pthread_mutex_lock(&clients_mutex);
-        for (int i = 0; i < MAX_CLIENTS; ++i)
-        {
-            if (client_sockets[i] == 0)
-            {
+        for (int i = 0; i < MAX_CLIENTS; ++i) {
+            if (client_sockets[i] == 0) {
                 client_sockets[i] = new_sock;
                 pthread_create(&tid, NULL, handle_client, &client_sockets[i]);
                 break;
