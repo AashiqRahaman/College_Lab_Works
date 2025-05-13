@@ -21,6 +21,6 @@ int main() {
 
     close(sock);
 
-    printf("Client Disconnected Successfully")
+    printf("Client Disconnected Successfully");
     return 0;
 }
