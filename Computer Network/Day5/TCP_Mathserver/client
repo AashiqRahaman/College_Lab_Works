@@ -1,0 +1,31 @@
+#include <stdio.h>
+#include <unistd.h>
+#include <arpa/inet.h>
+
+int main() {
+    int sock, num1, num2, result;
+    char op;
+    struct sockaddr_in server;
+
+    sock = socket(AF_INET, SOCK_STREAM, 0);
+    server.sin_family = AF_INET;
+    server.sin_port = htons(6000);
+    inet_pton(AF_INET, "127.0.0.1", &server.sin_addr);
+
+    connect(sock, (struct sockaddr *)&server, sizeof(server));
+
+    printf("Enter two numbers: ");
+    scanf("%d %d", &num1, &num2);
+    printf("Enter operation (+ - * /): ");
+    scanf(" %c", &op);
+
+    write(sock, &num1, sizeof(num1));
+    write(sock, &num2, sizeof(num2));
+    write(sock, &op, sizeof(op));
+
+    read(sock, &result, sizeof(result));
+    printf("Result from server: %d\n", result);
+
+    close(sock);
+    return 0;
+}
