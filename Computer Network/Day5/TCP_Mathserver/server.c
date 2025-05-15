@@ -1,41 +1,46 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
 #include <string.h>
+#include <unistd.h>
 #include <arpa/inet.h>
+#include "tinyexpr.h"
+
+#define PORT 6000
+#define BUFFER_SIZE 1024
 
 int main() {
     int server_fd, client_fd;
     struct sockaddr_in server_addr;
-    int num1, num2, result;
-    char op;
+    char expr[BUFFER_SIZE];
+    char result_str[BUFFER_SIZE];
+    double result;
 
     server_fd = socket(AF_INET, SOCK_STREAM, 0);
     server_addr.sin_family = AF_INET;
-    server_addr.sin_port = htons(6000);
+    server_addr.sin_port = htons(PORT);
     server_addr.sin_addr.s_addr = INADDR_ANY;
 
-    bind(server_fd, (struct sockaddr *)&server_addr, sizeof(server_addr));
+    bind(server_fd, (struct sockaddr*)&server_addr, sizeof(server_addr));
     listen(server_fd, 5);
 
-    printf("Math TCP Server running on port 6000...\n");
+    printf("Math Expression Server running on port %d...\n", PORT);
 
     while (1) {
         client_fd = accept(server_fd, NULL, NULL);
+        memset(expr, 0, sizeof(expr));
+        read(client_fd, expr, sizeof(expr));
 
-        read(client_fd, &num1, sizeof(num1));
-        read(client_fd, &num2, sizeof(num2));
-        read(client_fd, &op, sizeof(op));
+        printf("Received expression: %s\n", expr);
 
-        switch (op) {
-            case '+': result = num1 + num2; break;
-            case '-': result = num1 - num2; break;
-            case '*': result = num1 * num2; break;
-            case '/': result = num2 != 0 ? num1 / num2 : 0; break;
-            default: result = 0; break;
+        result = te_interp(expr, 0); // Interpret expression
+
+        if (isnan(result)) {
+            snprintf(result_str, sizeof(result_str), "Error: Invalid expression or division by zero.");
+        } else {
+            snprintf(result_str, sizeof(result_str), "Result: %.2f", result);
         }
 
-        write(client_fd, &result, sizeof(result));
+        write(client_fd, result_str, strlen(result_str));
         close(client_fd);
     }
 

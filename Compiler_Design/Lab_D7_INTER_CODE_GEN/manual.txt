@@ -1,0 +1,16 @@
+student@student-Veriton-M4660G ~/D/s/intermediate> bison -d exparser.y
+                                                   flex exprlexer.l
+                                                   gcc exprparser.tab.c lex.yy.c -o exprparser -lfl
+                                                   ./exprparser input.c
+
+Intermediate Code:
+
+t1 = d - e
+t2 = c * t1
+t3 = b + t2
+a = t3
+t4 = a + b
+t5 = c - d
+t6 = t4 * t5
+t7 = t6 / e
+x = t7

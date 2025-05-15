@@ -13,13 +13,13 @@ int main() {
     server_fd = socket(AF_INET, SOCK_STREAM, 0);
 
     server_addr.sin_family = AF_INET;
-    server_addr.sin_port = htons(5000);
+    server_addr.sin_port = htons(5002);
     server_addr.sin_addr.s_addr = INADDR_ANY;
 
     bind(server_fd, (struct sockaddr *)&server_addr, sizeof(server_addr));
     listen(server_fd, 5);
 
-    printf("TCP Day-Time Server running on port 5000...\n");
+    printf("TCP Day-Time Server running on port 5002...\n");
 
     while (1) {
         client_fd = accept(server_fd, NULL, NULL);
