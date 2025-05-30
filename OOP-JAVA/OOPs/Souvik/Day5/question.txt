@@ -1,0 +1,4 @@
+1) Check Whether a String Is Palindrome or not
+2) To print the initials of your name 
+Input ->John David Smith
+Output -> J.D.S 
